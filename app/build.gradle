@@ -77,4 +77,8 @@ dependencies {
     implementation "com.xwray:groupie-kotlin-android-extensions:$rootProject.groupieVersion"
 
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.gsonConverterVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.logInterceptorVersion"
 }

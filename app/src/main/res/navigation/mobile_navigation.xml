@@ -49,6 +49,9 @@
         <argument
             android:name="myarg"
             android:defaultValue="Android!" />
+        <action
+            android:id="@+id/action_tv_shows_dest_self"
+            app:destination="@id/tv_shows_dest" />
     </fragment>
     <fragment
         android:id="@+id/movie_details_fragment"

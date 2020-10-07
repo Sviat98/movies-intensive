@@ -3,6 +3,7 @@ package ru.mikhailskiy.intensiv
 import android.app.Application
 import timber.log.Timber
 
+
 class MovieFinderApp : Application() {
 
     override fun onCreate() {

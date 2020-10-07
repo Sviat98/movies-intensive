@@ -23,7 +23,7 @@ class MovieItem(
 
         // TODO Получать из модели
         Picasso.get()
-            .load("https://m.media-amazon.com/images/M/MV5BYTk3MDljOWQtNGI2My00OTEzLTlhYjQtOTQ4ODM2MzUwY2IwXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_.jpg")
+            .load("https://image.tmdb.org/t/p/w500${content.posterPath}")
             .into(viewHolder.image_preview)
     }
 }
