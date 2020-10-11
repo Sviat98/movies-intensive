@@ -3,9 +3,8 @@ package ru.mikhailskiy.intensiv.ui.tvshows
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import com.xwray.groupie.kotlinandroidextensions.Item
-import kotlinx.android.synthetic.main.item_with_text.*
 import kotlinx.android.synthetic.main.tv_show_item.*
-import ru.mikhailskiy.intensiv.data.TvShow
+import ru.mikhailskiy.intensiv.data.tv_show.TvShow
 import ru.mikhailskiy.intensiv.R
 
 class TvShowItem(

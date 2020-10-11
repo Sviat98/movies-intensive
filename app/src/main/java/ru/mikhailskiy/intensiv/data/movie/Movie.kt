@@ -1,13 +1,22 @@
-package ru.mikhailskiy.intensiv.data
+package ru.mikhailskiy.intensiv.data.movie
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class Movie(
+    var id : Int,
     var title: String,
     @SerializedName(value = "vote_average")
     var voteAverage: Double,
     @SerializedName(value = "poster_path")
-    var posterPath : String
+    var posterPath : String,
+    @SerializedName(value = "overview")
+    var description : String,
+    @SerializedName(value = "production_companies")
+    var studios : List<Studio>,
+    var genres : List<Genre>,
+    @SerializedName(value = "release_date")
+    var releaseDate : Date
 ) {
     val rating: Float
         get() = voteAverage.div(2).toFloat()

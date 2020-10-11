@@ -16,9 +16,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import ru.mikhailskiy.intensiv.BuildConfig
 import ru.mikhailskiy.intensiv.R
-import ru.mikhailskiy.intensiv.data.MockRepository
-import ru.mikhailskiy.intensiv.data.Movie
-import ru.mikhailskiy.intensiv.data.MovieResponse
+import ru.mikhailskiy.intensiv.data.movie.Movie
+import ru.mikhailskiy.intensiv.data.movie.MovieResponse
 import ru.mikhailskiy.intensiv.network.MovieApiClient
 import ru.mikhailskiy.intensiv.ui.afterTextChanged
 import timber.log.Timber
@@ -74,7 +73,7 @@ class FeedFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                Timber.e(t.toString())
             }
         })
 
@@ -97,7 +96,7 @@ class FeedFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                Timber.e(t.toString())
             }
         })
 
@@ -120,7 +119,7 @@ class FeedFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                Timber.e(t.toString())
             }
         })
 
@@ -143,7 +142,7 @@ class FeedFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                Timber.e(t.toString())
             }
         })
 
@@ -160,7 +159,7 @@ class FeedFragment : Fragment() {
         }
 
         val bundle = Bundle()
-        bundle.putString("title", movie.title)
+        bundle.putInt("id", movie.id)
         findNavController().navigate(R.id.movie_details_fragment, bundle, options)
     }
 

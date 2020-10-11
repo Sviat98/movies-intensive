@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.xwray.groupie.Group
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import kotlinx.android.synthetic.main.tv_shows_fragment.*
@@ -14,9 +13,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import ru.mikhailskiy.intensiv.BuildConfig
 import ru.mikhailskiy.intensiv.R
-import ru.mikhailskiy.intensiv.data.MovieResponse
-import ru.mikhailskiy.intensiv.data.TvShowResponse
+import ru.mikhailskiy.intensiv.data.tv_show.TvShowResponse
 import ru.mikhailskiy.intensiv.network.MovieApiClient
+import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -60,7 +59,7 @@ class TvShowsFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<TvShowResponse>, t: Throwable) {
-                TODO("Not yet implemented")
+                Timber.e(t.toString())
             }
         })
     }
