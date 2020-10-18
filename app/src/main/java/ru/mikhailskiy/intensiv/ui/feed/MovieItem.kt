@@ -14,6 +14,10 @@ class MovieItem(
 
     override fun getLayout() = R.layout.item_with_text
 
+    override fun getId(): Long {
+        return content.id.toLong()
+    }
+
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.description.text = content.title
         viewHolder.movie_rating.rating = content.rating

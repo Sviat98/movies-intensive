@@ -50,4 +50,8 @@ ext {
     retrofitVersion ='2.9.0'
     gsonConverterVersion ='2.9.0'
     logInterceptorVersion = '4.7.2'
+
+    rxJavaVersion = '2.2.16'
+    rxAndroidVersion = '2.1.1'
+    retrofitAdapterVersion = '2.7.1'
 }

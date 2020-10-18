@@ -7,14 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.tv_shows_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import ru.mikhailskiy.intensiv.BuildConfig
 import ru.mikhailskiy.intensiv.R
+import ru.mikhailskiy.intensiv.data.MockRepository
 import ru.mikhailskiy.intensiv.data.tv_show.TvShowResponse
 import ru.mikhailskiy.intensiv.network.MovieApiClient
+import ru.mikhailskiy.intensiv.ui.feed.MovieItem
 import timber.log.Timber
 
 private const val ARG_PARAM1 = "param1"
@@ -51,17 +55,15 @@ class TvShowsFragment : Fragment() {
 
         val popularTvShows= MovieApiClient.apiClient.getAllTvShows(API_KEY,"ru")
 
-        popularTvShows.enqueue(object : Callback<TvShowResponse>{
-            override fun onResponse(call: Call<TvShowResponse>, response: Response<TvShowResponse>) {
-                val popularTvShowsItems = response.body()!!.results.map { it -> TvShowItem(it) }.toList()
+        popularTvShows.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
+        doOnSubscribe { tv_show_progress_bar.visibility = View.VISIBLE }.doFinally { tv_show_progress_bar.visibility=  View.GONE }.subscribe(
+            {it->
+                val popularTvShowsItems = it.results.map { it -> TvShowItem(it) }.toList()
 
                 tv_shows_recycler_view.adapter = adapter.apply { addAll(popularTvShowsItems) }
-            }
-
-            override fun onFailure(call: Call<TvShowResponse>, t: Throwable) {
-                Timber.e(t.toString())
-            }
-        })
+            },
+            { error->Timber.e(error)}
+        )
     }
 
     companion object {

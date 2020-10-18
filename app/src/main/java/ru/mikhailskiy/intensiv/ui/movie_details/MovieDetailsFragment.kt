@@ -9,6 +9,8 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.movie_details_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -56,24 +58,23 @@ class MovieDetailsFragment : Fragment() {
 
         val movieDetails = MovieApiClient.apiClient.getMovieDetails(movieId, API_KEY,"ru")
 
-        movieDetails.enqueue(object : Callback<Movie>{
-            override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
-                Picasso.get()
-                    .load("https://image.tmdb.org/t/p/w500${response.body()!!.posterPath}")
-                    .into(movie_details_image)
+        movieDetails.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+            {it->Picasso.get()
+                .load("https://image.tmdb.org/t/p/w500${it.posterPath}")
+                .into(movie_details_image)
 
-                movie_details_title.text = response.body()!!.title
+                movie_details_title.text = it.title
 
-                movie_details_rating.rating = response.body()!!.rating
+                movie_details_rating.rating = it.rating
 
-                movie_details_description.text = response.body()!!.description
+                movie_details_description.text = it.description
 
 
-                val studiosList = response.body()!!.studios
+                val studiosList = it.studios
 
                 movie_details_studio.text = "Производство      ${studiosList.map { it -> it.name }.toList().joinToString()}"
 
-                val genresList = response.body()!!.genres
+                val genresList = it.genres
 
                 movie_details_genre.text = "Жанр    ${genresList.map { it->it.name }.toList().joinToString()}"
 
@@ -81,33 +82,21 @@ class MovieDetailsFragment : Fragment() {
 
                 //Log.d("date", SimpleDateFormat("yyyy").format(response.body()!!.releaseDate).toString())
 
-                movie_details_year.text = "Год      ${SimpleDateFormat("yyyy").format(response.body()!!.releaseDate)}"
-
-            }
-
-            override fun onFailure(call: Call<Movie>, t: Throwable) {
-                Timber.e(t.toString())
-            }
-        })
+                movie_details_year.text = "Год      ${SimpleDateFormat("yyyy").format(it.releaseDate)}"
+            },
+            {error -> Timber.e(error)}
+        )
 
         val movieCredits = MovieApiClient.apiClient.getMovieCredits(movieId, API_KEY,"ru")
 
-        movieCredits.enqueue(object : Callback<CreditsResponse>{
-            override fun onResponse(
-                call: Call<CreditsResponse>,
-                response: Response<CreditsResponse>
-            ) {
-                val actorItems = response.body()!!.actors.map { it->ActorItem(it) }.toList()
+        movieCredits.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
+            {it->
+                val actorItems = it.actors.map { it->ActorItem(it) }.toList()
 
 
-                    actors_recycler_view.adapter = GroupAdapter<GroupieViewHolder>().apply { addAll(actorItems) }
-            }
-
-            override fun onFailure(call: Call<CreditsResponse>, t: Throwable) {
-                Timber.e(t.toString())
-            }
-        })
-
+                actors_recycler_view.adapter = GroupAdapter<GroupieViewHolder>().apply { addAll(actorItems) }},
+            {error -> Timber.e(error)}
+        )
 
     }
 
