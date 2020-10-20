@@ -9,7 +9,7 @@ data class Movie(
     @SerializedName(value = "vote_average")
     var voteAverage: Double,
     @SerializedName(value = "poster_path")
-    var posterPath : String,
+    var posterPath : String? = null,
     @SerializedName(value = "overview")
     var description : String,
     @SerializedName(value = "production_companies")

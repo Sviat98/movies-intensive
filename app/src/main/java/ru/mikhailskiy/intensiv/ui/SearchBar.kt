@@ -7,6 +7,9 @@ import android.view.View
 import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.search_toolbar.view.*
 import ru.mikhailskiy.intensiv.R
 
@@ -21,6 +24,27 @@ class SearchBar @JvmOverloads constructor(
     private var hint: String = ""
     private var isCancelVisible: Boolean = true
 
+    val onTextChangedPublishSubject by lazy {
+        PublishSubject.create(
+            ObservableOnSubscribe<String> {subscriber->
+                editText.afterTextChanged {text->
+                    subscriber.onNext(text.toString())
+                }
+
+            }
+
+        )
+    }
+
+    val onTextChangedObservable by lazy{
+        Observable.create(ObservableOnSubscribe<String> {emitter ->
+            search_edit_text.afterTextChanged { text->
+                emitter.onNext(text.toString())
+            }
+        })
+    }
+
+
     init {
         LayoutInflater.from(context).inflate(R.layout.search_toolbar, this)
         if (attrs != null) {
@@ -31,6 +55,11 @@ class SearchBar @JvmOverloads constructor(
             }
         }
     }
+
+
+
+
+
 
     fun setText(text: String?) {
         this.editText.setText(text)
@@ -46,6 +75,7 @@ class SearchBar @JvmOverloads constructor(
         delete_text_button.setOnClickListener {
             search_edit_text.text.clear()
         }
+
     }
 
     override fun onAttachedToWindow() {
@@ -58,5 +88,7 @@ class SearchBar @JvmOverloads constructor(
                 delete_text_button.visibility = View.GONE
             }
         }
+
+
     }
 }

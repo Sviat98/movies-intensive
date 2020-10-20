@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 import io.reactivex.Observable
 import io.reactivex.ObservableOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,6 +17,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.feed_fragment.*
 import kotlinx.android.synthetic.main.feed_header.*
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.search_toolbar.*
 import kotlinx.android.synthetic.main.search_toolbar.view.*
 import ru.mikhailskiy.intensiv.BuildConfig
 import ru.mikhailskiy.intensiv.R
@@ -46,7 +47,7 @@ class SearchFragment : Fragment() {
     }
 
     private val adapter by lazy {
-        GroupAdapter<com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder>()
+        GroupAdapter<GroupieViewHolder>()
     }
 
     override fun onCreateView(
@@ -62,16 +63,9 @@ class SearchFragment : Fragment() {
         val searchTerm = requireArguments().getString("search")
         search_toolbar.setText(searchTerm)
 
-        val searchSource = Observable.create(ObservableOnSubscribe<String> { e ->
-            search_toolbar.search_edit_text.afterTextChanged {
-                e.onNext(search_toolbar.search_edit_text.text.toString())
-            }
-            e.setCancellable {
-                e.onComplete()
-            }
-        })
 
-        searchSource.map { text-> text.trim() }.filter { text -> text.length>3 }.debounce(500,
+
+        search_toolbar.onTextChangedObservable.map { text-> text.trim() }.filter { text -> text.length>3 }.debounce(500,
             TimeUnit.MILLISECONDS).
         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
             {
@@ -85,7 +79,7 @@ class SearchFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
-        //adapter.clear()
+        adapter.clear()
     }
 
     private fun searchMovies(searchTerm: String){

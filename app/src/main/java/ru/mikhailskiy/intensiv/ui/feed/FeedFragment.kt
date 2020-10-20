@@ -57,18 +57,8 @@ class FeedFragment : Fragment() {
         movies_recycler_view.layoutManager = LinearLayoutManager(context)
         movies_recycler_view.adapter = adapter.apply { addAll(listOf()) }
 
-        //movie_item_progress_bar.progressDrawable.colorFilter= ColorFilter(Color.RED,android.graphics.PorterDuff.Mode.MULTIPLY)
 
-        val searchSource = Observable.create(ObservableOnSubscribe<String> {e ->
-            search_toolbar.search_edit_text.afterTextChanged {
-                e.onNext(search_toolbar.search_edit_text.text.toString())
-            }
-            e.setCancellable {
-                e.onComplete()
-            }
-        })
-
-        searchSource.map { text-> text.trim() }.filter { text -> text.length>3 }.debounce(500,TimeUnit.MILLISECONDS).
+        search_toolbar.onTextChangedPublishSubject.map { text-> text.trim() }.filter { text -> text.length>3 }.debounce(500,TimeUnit.MILLISECONDS).
         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(
             {
                     it ->
@@ -76,13 +66,7 @@ class FeedFragment : Fragment() {
                     //Timber.tag("Searchterm").d(it.toString())
             }
         )
-
-//        search_toolbar.search_edit_text.afterTextChanged {
-//            Timber.d(it.toString())
-//            if (it.toString().length > 3) {
-//                openSearch(it.toString())
-//            }
-//        }
+        
 
         val topRatedMovies = MovieApiClient.apiClient.getTopRatedMovies(API_KEY,"ru")
 
